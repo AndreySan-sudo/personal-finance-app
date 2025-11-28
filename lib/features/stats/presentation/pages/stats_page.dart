@@ -490,17 +490,20 @@ class StatsPage extends StatelessWidget {
         ),
         Expanded(
           flex: 2,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (stats.totalIncome > 0)
-                _buildLegendItem('Ingresos', Colors.green, stats.totalIncome),
-              if (stats.totalIncome > 0 && stats.totalExpense > 0)
-                const SizedBox(height: 12),
-              if (stats.totalExpense > 0)
-                _buildLegendItem('Gastos', Colors.red, stats.totalExpense),
-            ],
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (stats.totalIncome > 0)
+                  _buildLegendItem('Ingresos', Colors.green, stats.totalIncome),
+                if (stats.totalIncome > 0 && stats.totalExpense > 0)
+                  const SizedBox(height: 12),
+                if (stats.totalExpense > 0)
+                  _buildLegendItem('Gastos', Colors.red, stats.totalExpense),
+              ],
+            ),
           ),
         ),
       ],

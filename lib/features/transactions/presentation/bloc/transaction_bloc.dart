@@ -41,7 +41,6 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
         return TransactionEntity.fromMap(doc.id, doc.data());
       }).toList();
 
-      // Se vuelve a enviar como evento interno (válido con Bloc)
       add(_InternalUpdateEvent(list));
     });
   }
