@@ -15,10 +15,11 @@ class LoadStatsEvent extends StatsEvent {
 
 class ChangeDateFilterEvent extends StatsEvent {
   final String filter;
-  ChangeDateFilterEvent(this.filter);
+  final DateTime? customDate;
+  ChangeDateFilterEvent(this.filter, {this.customDate});
 
   @override
-  List<Object?> get props => [filter];
+  List<Object?> get props => [filter, customDate];
 }
 
 class ChangeTypeFilterEvent extends StatsEvent {

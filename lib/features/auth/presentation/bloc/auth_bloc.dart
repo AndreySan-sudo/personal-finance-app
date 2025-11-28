@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 
+import '../../../../core/errors/failures.dart';
 import '../../domain/entities/user_entity.dart';
 import '../../domain/usecases/login.dart';
 import '../../domain/usecases/logout.dart';
@@ -29,8 +30,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     try {
       final user = await loginUseCase(event.email, event.password);
       emit(Authenticated(user));
+    } on Failure catch (failure) {
+      emit(AuthError(failure.message));
     } catch (e) {
-      emit(AuthError(e.toString()));
+      emit(AuthError('Error inesperado: ${e.toString()}'));
     }
   }
 
@@ -39,8 +42,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     try {
       final user = await registerUseCase(event.email, event.password);
       emit(Authenticated(user));
+    } on Failure catch (failure) {
+      emit(AuthError(failure.message));
     } catch (e) {
-      emit(AuthError(e.toString()));
+      emit(AuthError('Error inesperado: ${e.toString()}'));
     }
   }
 

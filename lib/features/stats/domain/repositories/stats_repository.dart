@@ -6,5 +6,6 @@ abstract class StatsRepository {
     required List<TransactionEntity> transactions,
     required String dateFilter,
     required String typeFilter,
+    DateTime? selectedDate,
   });
 }

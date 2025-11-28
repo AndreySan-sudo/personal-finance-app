@@ -8,12 +8,14 @@ class StatsRepositoryImpl implements StatsRepository {
     required List<TransactionEntity> transactions,
     required String dateFilter,
     required String typeFilter,
+    DateTime? selectedDate,
   }) {
     // Apply filters
     final filtered = _filterTransactions(
       transactions: transactions,
       dateFilter: dateFilter,
       typeFilter: typeFilter,
+      selectedDate: selectedDate,
     );
 
     // Calculate totals
@@ -31,6 +33,7 @@ class StatsRepositoryImpl implements StatsRepository {
       totalExpense: totalExpense,
       dateFilter: dateFilter,
       typeFilter: typeFilter,
+      selectedDate: selectedDate,
     );
   }
 
@@ -38,6 +41,7 @@ class StatsRepositoryImpl implements StatsRepository {
     required List<TransactionEntity> transactions,
     required String dateFilter,
     required String typeFilter,
+    DateTime? selectedDate,
   }) {
     final now = DateTime.now();
 
@@ -50,6 +54,9 @@ class StatsRepositoryImpl implements StatsRepository {
         final lastMonth = DateTime(now.year, now.month - 1);
         dateMatch =
             t.date.year == lastMonth.year && t.date.month == lastMonth.month;
+      } else if (dateFilter == 'custom' && selectedDate != null) {
+        dateMatch = t.date.year == selectedDate.year &&
+            t.date.month == selectedDate.month;
       }
 
       // Type Filter

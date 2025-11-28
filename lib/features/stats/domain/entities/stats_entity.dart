@@ -7,6 +7,7 @@ class StatsEntity extends Equatable {
   final double totalExpense;
   final String dateFilter; // 'this_month', 'last_month', 'all'
   final String typeFilter; // 'all', 'income', 'expense'
+  final DateTime? selectedDate;
 
   const StatsEntity({
     required this.filteredTransactions,
@@ -14,6 +15,7 @@ class StatsEntity extends Equatable {
     required this.totalExpense,
     required this.dateFilter,
     required this.typeFilter,
+    this.selectedDate,
   });
 
   double get balance => totalIncome - totalExpense;
@@ -25,5 +27,6 @@ class StatsEntity extends Equatable {
         totalExpense,
         dateFilter,
         typeFilter,
+        selectedDate,
       ];
 }

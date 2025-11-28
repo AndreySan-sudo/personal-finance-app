@@ -11,11 +11,13 @@ class GetStats {
     required List<TransactionEntity> transactions,
     required String dateFilter,
     required String typeFilter,
+    DateTime? selectedDate,
   }) {
     return repository.calculateStats(
       transactions: transactions,
       dateFilter: dateFilter,
       typeFilter: typeFilter,
+      selectedDate: selectedDate,
     );
   }
 }

@@ -6,6 +6,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../features/auth/data/datasources/auth_datasource.dart';
 import '../../features/auth/data/repositories/auth_repository_impl.dart';
 import '../../features/auth/domain/repositories/auth_repository.dart';
+import '../../features/auth/domain/usecases/login.dart';
+import '../../features/auth/domain/usecases/register.dart';
+import '../../features/auth/domain/usecases/logout.dart';
+import '../../features/auth/presentation/bloc/auth_bloc.dart';
 
 // transactions imports
 import '../../features/transactions/data/datasources/transaction_datasource.dart';
@@ -16,7 +20,7 @@ import '../../features/transactions/domain/usecases/add_transaction.dart';
 import '../../features/transactions/domain/usecases/delete_transaction.dart';
 import '../../features/transactions/domain/usecases/update_transaction.dart';
 import '../../features/transactions/presentation/bloc/transaction_bloc.dart';
-import '../../features/transactions/presentation/bloc/statistics/statistics_bloc.dart';
+// import '../../features/transactions/presentation/bloc/statistics/statistics_bloc.dart';
 
 // stats imports
 import '../../features/stats/data/repositories/stats_repository_impl.dart';
@@ -34,6 +38,18 @@ Future<void> initDependencies() async {
   // Auth
   sl.registerLazySingleton(() => AuthDatasource(sl<FirebaseAuth>()));
   sl.registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl(sl()));
+
+  // Auth use cases
+  sl.registerLazySingleton(() => LoginUseCase(sl<AuthRepository>()));
+  sl.registerLazySingleton(() => RegisterUseCase(sl<AuthRepository>()));
+  sl.registerLazySingleton(() => LogoutUseCase(sl<AuthRepository>()));
+
+  // Auth Bloc
+  sl.registerFactory(() => AuthBloc(
+        loginUseCase: sl<LoginUseCase>(),
+        registerUseCase: sl<RegisterUseCase>(),
+        logoutUseCase: sl<LogoutUseCase>(),
+      ));
 
   // Transactions datasource & repo
   sl.registerLazySingleton(
@@ -56,8 +72,6 @@ Future<void> initDependencies() async {
         deleteTransaction: sl<DeleteTransaction>(),
         updateTransaction: sl<UpdateTransaction>(),
       ));
-  sl.registerFactory(
-      () => StatisticsBloc(transactionBloc: sl<TransactionBloc>()));
 
   // Stats
   sl.registerLazySingleton<StatsRepository>(() => StatsRepositoryImpl());

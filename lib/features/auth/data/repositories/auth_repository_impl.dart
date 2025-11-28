@@ -1,4 +1,5 @@
-// import '../../../core/errors/exceptions.dart'; // opcional para errores
+import '../../../../core/errors/exceptions.dart';
+import '../../../../core/errors/failures.dart';
 import '../../domain/entities/user_entity.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../datasources/auth_datasource.dart';
@@ -11,14 +12,44 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<UserEntity> login(String email, String password) async {
-    final user = await datasource.login(email, password);
-    return UserModel.fromFirebase(user);
+    try {
+      final user = await datasource.login(email, password);
+      return UserModel.fromFirebase(user);
+    } on InvalidCredentialsException {
+      throw const InvalidCredentialsFailure();
+    } on UserNotFoundException {
+      throw const UserNotFoundFailure();
+    } on WrongPasswordException {
+      throw const WrongPasswordFailure();
+    } on InvalidEmailException {
+      throw const InvalidEmailFailure();
+    } on AuthException catch (e) {
+      throw AuthFailure(e.message);
+    } on NetworkException {
+      throw const NetworkFailure();
+    } catch (e) {
+      throw UnknownFailure(e.toString());
+    }
   }
 
   @override
   Future<UserEntity> register(String email, String password) async {
-    final user = await datasource.register(email, password);
-    return UserModel.fromFirebase(user);
+    try {
+      final user = await datasource.register(email, password);
+      return UserModel.fromFirebase(user);
+    } on EmailAlreadyInUseException {
+      throw const EmailAlreadyInUseFailure();
+    } on WeakPasswordException {
+      throw const WeakPasswordFailure();
+    } on InvalidEmailException {
+      throw const InvalidEmailFailure();
+    } on AuthException catch (e) {
+      throw AuthFailure(e.message);
+    } on NetworkException {
+      throw const NetworkFailure();
+    } catch (e) {
+      throw UnknownFailure(e.toString());
+    }
   }
 
   @override

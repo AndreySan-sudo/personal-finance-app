@@ -12,6 +12,7 @@ class StatsBloc extends Bloc<StatsEvent, StatsState> {
 
   String _currentDateFilter = 'this_month';
   String _currentTypeFilter = 'all';
+  DateTime? _selectedDate;
   String _userId = '';
 
   StatsBloc({
@@ -37,6 +38,7 @@ class StatsBloc extends Bloc<StatsEvent, StatsState> {
         transactions: transactions,
         dateFilter: _currentDateFilter,
         typeFilter: _currentTypeFilter,
+        selectedDate: _selectedDate,
       );
 
       emit(StatsLoaded(stats));
@@ -49,6 +51,9 @@ class StatsBloc extends Bloc<StatsEvent, StatsState> {
       ChangeDateFilterEvent event, Emitter<StatsState> emit) async {
     try {
       _currentDateFilter = event.filter;
+      if (event.customDate != null) {
+        _selectedDate = event.customDate;
+      }
 
       final transactionsStream = getTransactions(_userId);
       final snapshot = await transactionsStream.first;
@@ -58,6 +63,7 @@ class StatsBloc extends Bloc<StatsEvent, StatsState> {
         transactions: transactions,
         dateFilter: _currentDateFilter,
         typeFilter: _currentTypeFilter,
+        selectedDate: _selectedDate,
       );
 
       emit(StatsLoaded(stats));
@@ -79,6 +85,7 @@ class StatsBloc extends Bloc<StatsEvent, StatsState> {
         transactions: transactions,
         dateFilter: _currentDateFilter,
         typeFilter: _currentTypeFilter,
+        selectedDate: _selectedDate,
       );
 
       emit(StatsLoaded(stats));
